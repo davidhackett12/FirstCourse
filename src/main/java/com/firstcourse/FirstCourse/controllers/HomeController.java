@@ -25,16 +25,18 @@ public class HomeController {
     }
 
     @RequestMapping(value= "registration", method = RequestMethod.GET)
-    public String registration(User user){
+    public String registration(Model model){
+        model.addAttribute(new User());
         return "home/registration";
     }
 
 
-//    @RequestMapping(value= "registration", method = RequestMethod.POST)
-//    public String registration(User user){
-//        userService.saveUser(user);
-//        return "redirect:";
-//    }
+
+    @RequestMapping(value= "registration", method = RequestMethod.POST)
+    public String registerUser(User user){
+        userService.saveUser(user);
+        return "redirect:/profile";
+    }
 
 //    @RequestMapping(value = "login", method = RequestMethod.POST)
 //    public String login(String email){
