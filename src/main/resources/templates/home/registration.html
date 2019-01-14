@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+<head th:replace="fragments :: head">
 </head>
 <body>
 
-Hello First Course
+<nav th:replace="fragments :: navigation"></nav>
 
 
-<div>
-    <h3>Sign Up</h3>
+<div class = "row">
+<div class="col-md-4">
+    <Legend>Sign Up</Legend>
     <br/>
     <form action= "/registration" method="post" style="max-width:600px;" th:object="${user}">
         <div class="form-group">
@@ -40,6 +39,7 @@ Hello First Course
         <span name="error" th:text="${error}"></span>
         <input type="submit" value="Sign Up" />
     </form>
+</div>
 </div>
 
 </body>
