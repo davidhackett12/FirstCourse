@@ -21,7 +21,7 @@ public class User {
     private int active;
 
     @ManyToMany
-    private List<Role> roles;
+    private List<Role> role;
 
     public User() {
     }
@@ -82,16 +82,16 @@ public class User {
         this.active = active;
     }
 
-    public List<Role> getRoles() {
-        return roles;
+    public List<Role> getRole() {
+        return role;
     }
 
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
+    public void setRole(List<Role> roles) {
+        this.role = roles;
     }
 
     public void addRole(Role newRole){
-        roles.add(newRole);
+        role.add(newRole);
     }
 
 }
