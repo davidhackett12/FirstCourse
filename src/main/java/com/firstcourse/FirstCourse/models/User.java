@@ -1,6 +1,12 @@
 package com.firstcourse.FirstCourse.models;
 
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Entity
@@ -10,12 +16,22 @@ public class User {
     @GeneratedValue
     private int Id;
 
+    @NotNull(message = "First Name is Required")
+    @NotEmpty(message = "First Name is Required")
     private String firstName;
 
+    @NotNull(message = "Last Name is Required")
+    @NotEmpty(message = "Last Name is Required")
     private String lastName;
 
+    @NotNull(message = "Email is Required")
+    @NotEmpty(message = "Email is Required")
+    @Email(message = "Invalid Email")
     private String email;
 
+    @NotNull(message = "Password is Required")
+    @NotEmpty(message = "Password is Required")
+    @Size(min=5, message = "Password must be at least 5 characters")
     private String password;
 
     private int active;

@@ -8,8 +8,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.validation.Valid;
 
 @Controller
 public class HomeController {
@@ -33,9 +38,14 @@ public class HomeController {
 
 
     @RequestMapping(value= "registration", method = RequestMethod.POST)
-    public String registerUser(User user){
-        userService.saveUser(user);
-        return "redirect:/profile";
+    public String registerUser(@ModelAttribute @Valid User user, Errors errors, Model model){
+        if(errors.hasErrors()){
+            model.addAttribute("message","Failed!");
+        } else{
+            userService.saveUser(user);
+            return "redirect:/profile";
+        }
+        return "home/registration";
     }
 
 //    @RequestMapping(value = "login", method = RequestMethod.POST)
@@ -47,7 +57,10 @@ public class HomeController {
 //    }
 
     @RequestMapping(value = "/profile")
-    public String profile(){
+    public String profile(Model model){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByEmail(auth.getName());
+        model.addAttribute("user", user.getFirstName());
         return "home/profile";
     }
 

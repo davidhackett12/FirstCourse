@@ -2,12 +2,13 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
 <head th:replace="fragments :: head">
 </head>
-<body>
 
+<body>
 <nav th:replace="fragments :: profile-nav"></nav>
-<body>
 
-Profile
+<h1 th:text="${user}"></h1>
+
 
 </body>
+
 </html>
