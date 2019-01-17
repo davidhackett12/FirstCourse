@@ -2,7 +2,10 @@ package com.firstcourse.FirstCourse.controllers;
 
 
 import com.firstcourse.FirstCourse.UserService;
+import com.firstcourse.FirstCourse.models.Profile;
 import com.firstcourse.FirstCourse.models.User;
+import com.firstcourse.FirstCourse.models.data.ProfileDao;
+import com.firstcourse.FirstCourse.models.data.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +24,12 @@ public class HomeController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserDao userDao;
+
+    @Autowired
+    private ProfileDao profileDao;
 
     @RequestMapping(value = "login", method = RequestMethod.GET)
     public String login(Model model){
@@ -43,6 +52,12 @@ public class HomeController {
             model.addAttribute("message","Failed!");
         } else{
             userService.saveUser(user);
+            Profile profile = new Profile();
+            profile.setUser(user);
+            profile.setFirstName(user.getFirstName());
+            profile.setLastName(user.getLastName());
+            userDao.save(user);
+            profileDao.save(profile);
             return "redirect:/profile";
         }
         return "home/registration";
@@ -60,8 +75,18 @@ public class HomeController {
     public String profile(Model model){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findUserByEmail(auth.getName());
-        model.addAttribute("user", user.getFirstName());
+        Profile profile = user.getProfile();
+        model.addAttribute("profile", profile);
         return "home/profile";
+    }
+
+    @RequestMapping(value ="/profile/edit")
+    public String editProfile(Model model){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByEmail(auth.getName());
+        Profile profile = user.getProfile();
+        model.addAttribute("profile", profile);
+        return "home/editProfile";
     }
 
 

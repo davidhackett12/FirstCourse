@@ -39,6 +39,9 @@ public class User {
     @ManyToMany
     private List<Role> role;
 
+    @OneToOne(mappedBy = "user")
+    private Profile profile;
+
     public User() {
     }
 
@@ -110,4 +113,11 @@ public class User {
         role.add(newRole);
     }
 
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+    }
 }
