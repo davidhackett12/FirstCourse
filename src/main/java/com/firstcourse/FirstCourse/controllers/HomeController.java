@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -32,9 +33,11 @@ public class HomeController {
     private ProfileDao profileDao;
 
     @RequestMapping(value = "login", method = RequestMethod.GET)
-    public String login(Model model){
+    public String login(Model model, boolean registration){
 
-//        model.addAttribute("user", new User());
+        if(registration){
+            model.addAttribute("message", "Thank you for registering you may now login");
+        }
         return "home/login";
     }
 
@@ -58,18 +61,11 @@ public class HomeController {
             profile.setLastName(user.getLastName());
             userDao.save(user);
             profileDao.save(profile);
-            return "redirect:/profile";
+            return "redirect:/login?registration=true";
         }
         return "home/registration";
     }
 
-//    @RequestMapping(value = "login", method = RequestMethod.POST)
-//    public String login(String email){
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        User user = userService.findUserByEmail(auth.getName());
-//          User user = userService.findUserByEmail(email);
-//        return "redirect:/profile";
-//    }
 
     @RequestMapping(value = "/profile")
     public String profile(Model model){
@@ -80,13 +76,31 @@ public class HomeController {
         return "home/profile";
     }
 
-    @RequestMapping(value ="/profile/edit")
+    @RequestMapping(value ="/profile/edit", method = RequestMethod.GET)
     public String editProfile(Model model){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findUserByEmail(auth.getName());
         Profile profile = user.getProfile();
         model.addAttribute("profile", profile);
         return "home/editProfile";
+    }
+
+    @RequestMapping(value = "/profile/edit", method = RequestMethod.POST)
+    public String changeProfile(Model model, String firstName, String lastName,
+                                String city, String workPlace, String job){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByEmail(auth.getName());
+        Profile profile = user.getProfile();
+        profile.setFirstName(firstName);
+        profile.setLastName(lastName);
+        profile.setCity(city);
+        profile.setWorkPlace(workPlace);
+        profile.setJob(job);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        profileDao.save(profile);
+        userDao.save(user);
+        return "redirect:/profile";
     }
 
 
