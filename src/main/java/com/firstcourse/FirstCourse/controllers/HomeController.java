@@ -2,8 +2,10 @@ package com.firstcourse.FirstCourse.controllers;
 
 
 import com.firstcourse.FirstCourse.UserService;
+import com.firstcourse.FirstCourse.models.Post;
 import com.firstcourse.FirstCourse.models.Profile;
 import com.firstcourse.FirstCourse.models.User;
+import com.firstcourse.FirstCourse.models.data.PostDao;
 import com.firstcourse.FirstCourse.models.data.ProfileDao;
 import com.firstcourse.FirstCourse.models.data.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
+import java.util.Date;
+import java.util.List;
 
 @Controller
 public class HomeController {
@@ -31,6 +35,9 @@ public class HomeController {
 
     @Autowired
     private ProfileDao profileDao;
+
+    @Autowired
+    private PostDao postDao;
 
     @RequestMapping(value = "login", method = RequestMethod.GET)
     public String login(Model model, boolean registration){
@@ -67,13 +74,24 @@ public class HomeController {
     }
 
 
-    @RequestMapping(value = "/profile")
+    @RequestMapping(value = "/profile", method = RequestMethod.GET)
     public String profile(Model model){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findUserByEmail(auth.getName());
         Profile profile = user.getProfile();
+        List alist = profile.getPosts();
         model.addAttribute("profile", profile);
         return "home/profile";
+    }
+
+    @RequestMapping(value ="/createPost", method = RequestMethod.POST)
+    public String createPost(String text){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByEmail(auth.getName());
+        Profile profile = user.getProfile();
+        Post newPost = new Post(text, new Date(), profile);
+        postDao.save(newPost);
+        return "redirect:/profile";
     }
 
     @RequestMapping(value ="/profile/edit", method = RequestMethod.GET)

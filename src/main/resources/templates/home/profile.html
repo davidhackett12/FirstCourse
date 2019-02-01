@@ -44,12 +44,32 @@
 
     </div>
     <div class = 'col-md-1'></div>
-    <a href="/profile/edit"> Edit </a>
     <div class = "col-md-6">
-        <h1 th:text="${profile.firstName} + ' ' + ${profile.lastName}"></h1>
-        <p th:text="${profile.city}"></p>
+        <div>
+            <h1 th:text="${profile.firstName} + ' ' + ${profile.lastName}"></h1>
+            <span th:text="${profile.city}"></span>
+            <span th:text="${profile.workPlace} "></span>
+            <span th:text="${profile.job}"></span><br>
+            <a href="/profile/edit "> Edit </a>
+        </div>
+        <br>
+        <form method="post" action="/createPost">
+            <div class="form-group">
+                <label class="col-form-label" for="text">New Post</label>
+                <input type="text" class="form-control" placeholder="Tell the World Something" id="text" th:name ="text">
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm">Post</button>
+        </form>
+        <br>
+        <div class="card border-secondary mb-3" th:each="post : ${profile.posts}">
+            <div class="card-header" th:text="${profile.firstName}"></div>
+            <div class="card-body">
+                <p class="card-text" th:text="${post.text}"></p>
+            </div>
+        </div>
     </div>
 </div>
+
 </body>
 
 </html>

@@ -1,6 +1,7 @@
 package com.firstcourse.FirstCourse.models;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Profile {
@@ -12,6 +13,10 @@ public class Profile {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany
+    @JoinColumn(name="profile_id")
+    private List<Post> posts;
 
     private String firstName;
 
@@ -86,5 +91,17 @@ public class Profile {
 
     public void setJob(String job) {
         this.job = job;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
+
+    public void addPost(Post post){
+        this.posts.add(post);
     }
 }
